@@ -11,10 +11,18 @@ use app\models\ContactForm;
 use app\models\EntryForm;
 use app\models\RegistrationForm;
 use app\models\UploadImageForm;
+use app\models\MyUser;
 use yii\bootstrap\Alert;
 use yii\base\DynamicModel;//支持动态定义attributes 和 rules。
 use yii\widgets\ActiveForm;//bootstrap\ActiveForm
 use yii\web\UploadedFile;
+use yii\data\Pagination;//使用分页插件
+use yii\data\Sort; //对象来表示一个排序模式
+use app\components\Taxi;
+//use yii\db\Query; //使用 yii\db\ActiveQuery 或 yii\db\Query 来从数据库中查询数据
+use yii\data\ActiveDataProvider ;//ActiveDataProvider使用DB应用程序组件作为数据库连接。
+use yii\data\SqlDataProvider ;//SqlDataProvider类是使用原始的SQL语句方式工作的。
+use yii\data\ArrayDataProvider;//ArrayDataProvider类是使用大数组是最好的方式。此数组中元素可以是 DAO 的任何查询结果或 ActiveRecord 的实例
 class SiteController extends Controller
 {
     /**
@@ -392,7 +400,115 @@ class SiteController extends Controller
            }
            return $this->render('upload', ['model' => $model]);
     }
+    //格式化
     public function actionFormatter(){
        return $this->render('formatter');
+    }
+    //分页
+    public function actionPagination()
+    {
+        $query = MyUser::find();
+        $totalcount = $query->count();//获取总记录数
+        $pagesize = \Yii::$app->request->get('pagesize');
+        $defaultPageSize = !empty($pagesize) ? $pagesize : 5;
+        $pagination = new Pagination(['totalCount' => $totalcount ,'defaultPageSize' => $defaultPageSize]);//使用分页
+        $models = $query->offset($pagination->offset)->limit($pagination->limit)->all();//获取总记录  find()->toArray() asArray()
+        return $this->render('pagination', [
+          'models' => $models,
+          'pagination' => $pagination,
+        ]);
+    }
+    //排序
+    public function actionSorting()
+    {
+        $sort = new Sort(['attributes' => ['id','name','email']]);
+        $models = MyUser::find()->orderBy($sort->orders)->all();
+        return $this->render('sorting', [
+          'models' => $models,
+          'sort' => $sort,
+        ]);
+    }
+    //属性
+    public function actionProperties()
+    {
+        $object = new Taxi();
+        $phone = $object->getPhone();
+        var_dump($phone);
+        $object->setPhone('18483699374');
+        $object->phone = '13800138000';
+        var_dump($phone);
+    }
+    //Active 数据提供者
+    public function actionDataProvider()
+    {
+        $query = MyUser::find();//对象变为数组->asArray()
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 2
+            ]
+        ]);
+        $users = $provider->getModels();
+        echo '<pre>';print_r($users);
+    }
+    //SQL数据提供者
+    public function actionData2Provider()
+    {
+        $count = Yii::$app->db->createCommand('SELECT COUNT(id) AS count FROM user')->queryScalar();
+        $provider = new SqlDataProvider([
+            'sql' => 'SELECT * FROM user',
+            'totalCount' => $count,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            'sort' => [
+                'attributes' => ['id','name','email'],
+            ]
+        ]);
+        $users = $provider->getModels();
+        echo '<pre>';print_r($users);
+    }
+    //数组数据提供者
+    public function actionData3Provider()
+    {
+        $data = MyUser::find()->asArray()->all();
+        $provider = new ArrayDataProvider([
+            'allModels' => $data,
+            'pagination' => [
+                'pageSize' => 3
+            ],
+            'sort' => [
+                'attributes' => ['id','name']
+            ]
+        ]);
+        $users = $provider->getModels();
+        echo '<pre>';print_r($users);
+    }
+    //数据Widgets
+    public function actionDataWidget()
+    {
+        $model = MyUser::find()->orderBy('id desc')->one();
+        $viewtype = \Yii::$app->request->get('viewtype');
+        if($viewtype == 'grid' || $viewtype == 'grid2' || $viewtype == 'grid3'){
+            $dataprovider = new ActiveDataProvider([
+                'query' => MyUser::find(),
+                'pagination' => [
+                    'pageSize' =>10
+                ]
+            ]);
+            return $this->render('datawidget',['dataProvider' => $dataprovider,'viewtype' => $viewtype]);
+        }
+        return $this->render('datawidget',['model' => $model]);
+    }
+    //数据widgets之ListView
+    public function actionDataListviewWidget()
+    {
+        $dataprovider = new ActiveDataProvider([
+            'query' => MyUser::find(),
+            'pagination' => [
+                'pageSize' =>10
+            ]
+        ]);
+        return $this->render('datawidget',['dataProvider' => $dataprovider]);
     }
 }

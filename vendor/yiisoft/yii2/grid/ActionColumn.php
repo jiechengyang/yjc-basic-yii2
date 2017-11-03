@@ -13,9 +13,9 @@ use yii\helpers\Url;
 
 /**
  * ActionColumn is a column for the [[GridView]] widget that displays buttons for viewing and manipulating the items.
- *
+ * ActionColumn是[[GridView]]小部件的一列，用于显示用于查看和操作项目的按钮。
  * To add an ActionColumn to the gridview, add it to the [[GridView::columns|columns]] configuration as follows:
- *
+ * 要向gridview添加ActionColumn，将其添加到[[gridview:columns |列]]配置如下:
  * ```php
  * 'columns' => [
  *     // ...

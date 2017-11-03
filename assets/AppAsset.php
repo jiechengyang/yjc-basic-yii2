@@ -18,15 +18,15 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'static/css/site.css',
     ];
     public $js = [
-        'js/common.js',
+        'static/js/common.js',
     ];
     public $jsOptions = array(
         'position' => \yii\web\View::POS_HEAD
     );
-    public $cssOptions = ['condition' => 'lte IE8'];
+    //public $cssOptions = ['condition' => 'lte IE8'];
     /**
      *  <!--[if lte IE9]>
      *  <link rel="stylesheet" href="path/to/foo.css">

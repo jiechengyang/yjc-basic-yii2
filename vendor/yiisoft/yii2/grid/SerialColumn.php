@@ -9,21 +9,21 @@ namespace yii\grid;
 
 /**
  * SerialColumn displays a column of row numbers (1-based).
- *
+ * SerialColumn显示行号(基于1)的列。
  * To add a SerialColumn to the [[GridView]], add it to the [[GridView::columns|columns]] configuration as follows:
- *
+ * 要将SerialColumn添加到[[GridView]]中，将其添加到[[GridView:columns |列]]配置如下:
  * ```php
  * 'columns' => [
  *     // ...
  *     [
  *         'class' => 'yii\grid\SerialColumn',
- *         // you may configure additional properties here
+ *         // you may configure additional properties here 您可以在这里配置额外的属性
  *     ],
  * ]
  * ```
  *
  * For more details and usage information on SerialColumn, see the [guide article on data widgets](guide:output-data-widgets).
- *
+ * 有关SerialColumn的更多详细信息和使用信息，请参阅“数据小部件指南”(guide:output -data widgets)。
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */

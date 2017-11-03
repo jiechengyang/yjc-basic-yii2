@@ -13,10 +13,10 @@ AdminAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <?php AdminAsset::addCss($this,'@web/bjui/B-JUI/themes/css/ie7.css',['condition' => 'lte IE8']);  ?>
+    <?php //AdminAsset::addCss($this,'@borwer/themes/css/ie7.css',['condition' => 'lte IE8']);  ?>
     <?php $this->head() ?>
      <!--[if lte IE 7]>
-    <link href="bjui/B-JUI/themes/css/ie7.css" rel="stylesheet">
+    <link href="static/css/ie7.css" rel="stylesheet">
     <![endif]-->
     <script type="text/javascript">
     $(function() {
@@ -132,26 +132,29 @@ AdminAsset::register($this);
                 <button type="button" class="navbar-toggle collapsed" id="bjui-navbar-collapsebtn" data-toggle="collapsenavbar" data-target="#bjui-navbar-collapse" aria-expanded="false">
                     <i class="fa fa-angle-double-right"></i>
                 </button>
-                <a class="navbar-brand" href="http://b-jui.com"><img src="images/logo.png" height="30"></a>
+                <a class="navbar-brand" href="http://b-jui.com"><img src="static/images/logo.png" height="30"></a>
             </div>
             <nav class="collapse navbar-collapse" id="bjui-navbar-collapse">
                 <ul class="nav navbar-nav navbar-right" id="bjui-hnav-navbar">
                     <li class="active">
-                        <a href="bjui/json/menu-form.json?>" data-toggle="sidenav" data-id-key="targetid">表单相关</a>
+                        <a href="static/json/menu-form.json?>" data-toggle="sidenav" data-id-key="targetid">表单相关</a>
                     </li>
                     <li>
-                        <a href="bjui/json/menu-base.json" data-toggle="sidenav" data-id-key="targetid">基础组件</a>
+                        <a href="static/json/menu-base.json" data-toggle="sidenav" data-id-key="targetid">基础组件</a>
                     </li>
                     <li>
-                        <a href="bjui/json/menu-datagrid.json" data-toggle="sidenav" data-id-key="targetid">数据表格(Datagrid)</a>
+                        <a href="static/json/menu-datagrid.json" data-toggle="sidenav" data-id-key="targetid">数据表格(Datagrid)</a>
                     </li>
                     <li>
+                        <a href="static/json/menu-demo.json" data-toggle="sidenav" data-id-key="targetid">个人系统demo</a>
+                    </li>
+<!--                    <li>
                         <a href="javascript:;" data-toggle="sidenav" data-tree="true" data-tree-options="{onClick:MainMenuClick}" data-id-key="targetid">待续……</a>
                         <script class="items"></script>
                     </li>
                     <li>
                         <a href="1.2" target="_blank">旧版DEMO</a>
-                    </li>
+                    </li>-->
                 </ul>
             </nav>
         </div>
@@ -160,7 +163,7 @@ AdminAsset::register($this);
         <?=$content;?>
     </div>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <?=Html::jsFile('@web/bjui/B-JUI/other/ie10-viewport-bug-workaround.js')?>
+    <?//=Html::jsFile('@brower/bjui/other/ie10-viewport-bug-workaround.js')?>
 </body>
 <?php $this->endBody() ?>
 </html>

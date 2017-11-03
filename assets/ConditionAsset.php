@@ -8,13 +8,14 @@
  use yii\web\AssetBundle;
  class ConditionAsset extends AssetBundle
  {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';  
+    //public $basePath = '@webroot';
+    //public $baseUrl = '@web';  
+    public $sourcePath = '@bower/bjui';
     public $js = [
-        'bjui/B-JUI/other/html5shiv.min.js',
-        'bjui/B-JUI/other/respond.min.js',
-        'bjui/B-JUI/other/jquery.iframe-transport.js',
-        'bjui/B-JUI/other/jquery.iframe-transport.js',
+        'other/html5shiv.min.js',
+        'other/respond.min.js',
+        'other/jquery.iframe-transport.js',
+        'other/jquery.iframe-transport.js',
     ];
     //public $cssOptions = ['condition' => 'lte IE9'];
     public $jsOptions = ['position' => \yii\web\View::POS_HEAD,'condition' => 'lte IE9'];

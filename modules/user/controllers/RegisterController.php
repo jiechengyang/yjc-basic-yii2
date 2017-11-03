@@ -8,4 +8,9 @@ class RegisterController extends Controller
     {
            return  $this->render('index',[]);
     }
+    public function actionTest()
+    {
+        $id =\Yii::$app->request->get('id');
+        echo "我是删除处理页面---编号为".$id,'即将被删除';
+    }
 }
