@@ -44,41 +44,53 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 {
     /**
      * @event Event an event that is triggered when the record is initialized via [[init()]].
+     * 当通过[[init(]]]初始化记录时触发的事件。
      */
     const EVENT_INIT = 'init';
     /**
      * @event Event an event that is triggered after the record is created and populated with query result.
+     * 在创建记录并填充查询结果后触发的事件事件。
      */
     const EVENT_AFTER_FIND = 'afterFind';
     /**
      * @event ModelEvent an event that is triggered before inserting a record.
+     * @event ModelEvent在插入记录之前触发的事件。
      * You may set [[ModelEvent::isValid]] to be `false` to stop the insertion.
+     * 您可以设置[[ModelEvent::isValid]]为“false”以停止插入。
      */
     const EVENT_BEFORE_INSERT = 'beforeInsert';
     /**
      * @event AfterSaveEvent an event that is triggered after a record is inserted.
+     * @event AfterSaveEvent在插入记录之后触发的事件。
      */
     const EVENT_AFTER_INSERT = 'afterInsert';
     /**
      * @event ModelEvent an event that is triggered before updating a record.
+     * @event ModelEvent在更新记录之前触发的事件。
      * You may set [[ModelEvent::isValid]] to be `false` to stop the update.
+     * 您可以设置[[ModelEvent::isValid]]为“false”来停止更新。
      */
     const EVENT_BEFORE_UPDATE = 'beforeUpdate';
     /**
      * @event AfterSaveEvent an event that is triggered after a record is updated.
+     * @event AfterSaveEvent一个在记录更新后触发的事件。
      */
     const EVENT_AFTER_UPDATE = 'afterUpdate';
     /**
      * @event ModelEvent an event that is triggered before deleting a record.
+     * @event ModelEvent在删除记录之前触发的事件。
      * You may set [[ModelEvent::isValid]] to be `false` to stop the deletion.
+     * 您可以设置[[ModelEvent::isValid]]为“false”来停止删除。
      */
     const EVENT_BEFORE_DELETE = 'beforeDelete';
     /**
      * @event Event an event that is triggered after a record is deleted.
+     * 在记录被删除后触发的事件。
      */
     const EVENT_AFTER_DELETE = 'afterDelete';
     /**
      * @event Event an event that is triggered after a record is refreshed.
+     * 刷新刷新记录后触发的事件。
      * @since 2.0.8
      */
     const EVENT_AFTER_REFRESH = 'afterRefresh';

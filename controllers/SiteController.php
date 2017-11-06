@@ -511,4 +511,25 @@ class SiteController extends Controller
         ]);
         return $this->render('datawidget',['dataProvider' => $dataprovider]);
     }
+    /*事件学习*/
+    public function actionTestEvent()
+    {
+        $model = new MyUser();
+        $model->name = 'JieChengYang';
+        $model->email = '2064320087@qq.com';
+        if($model->save()){//保存
+            $model->trigger(MyUser::EVENT_NEW_USER);//触发事件
+        }
+    }
+    /*行为学习:现在，当我们创建或更新的用户，它的 name 属性将会自动转换为大写。*/
+    public function actionTestBehavior()
+    {
+        $model = new MyUser();
+        $model->name = "fengruixue";
+        $model->email = "fengruixue.com@gmail.com";
+        if($model->save()){
+            echo '<pre>';
+            print_r(MyUser::find()->asArray()->all());
+        }
+    }
 }

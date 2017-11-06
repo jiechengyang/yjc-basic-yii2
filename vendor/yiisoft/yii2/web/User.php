@@ -59,10 +59,10 @@ use yii\rbac\CheckAccessInterface;
  */
 class User extends Component
 {
-    const EVENT_BEFORE_LOGIN = 'beforeLogin';
-    const EVENT_AFTER_LOGIN = 'afterLogin';
-    const EVENT_BEFORE_LOGOUT = 'beforeLogout';
-    const EVENT_AFTER_LOGOUT = 'afterLogout';
+    const EVENT_BEFORE_LOGIN = 'beforeLogin';//登录之前的事件
+    const EVENT_AFTER_LOGIN = 'afterLogin';//登录之后的事件
+    const EVENT_BEFORE_LOGOUT = 'beforeLogout';//注销登录之前的事件
+    const EVENT_AFTER_LOGOUT = 'afterLogout';//注销登录之后的事件
 
     /**
      * @var string the class name of the [[identity]] object.

@@ -409,13 +409,13 @@ class Component extends Object
 
     /**
      * Returns a list of behaviors that this component should behave as.
-     *·µ»Ø¸Ã×é¼þÓ¦¸Ã±íÏÖµÄÐÐÎªÁÐ±í¡£
+     *ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã±ï¿½ï¿½Öµï¿½ï¿½ï¿½Îªï¿½Ð±ï¿½
      * Child classes may override this method to specify the behaviors they want to behave as.
-     *×ÓÀà¿ÉÒÔ¸²¸Ç´Ë·½·¨À´Ö¸¶¨ËûÃÇÏëÒª±íÏÖµÄÐÐÎª¡£
+     *ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½Ç´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Îªï¿½ï¿½
      * The return value of this method should be an array of behavior objects or configurations
      * indexed by behavior names. A behavior configuration can be either a string specifying
      * the behavior class or an array of the following structure:
-     *¸Ã·½·¨µÄ·µ»ØÖµÓ¦¸ÃÊÇÐÐÎª¶ÔÏóµÄÊý×é£¬»òÕßÓÉÐÐÎªÃû³ÆË÷ÒýµÄÅäÖÃ¡£ÐÐÎªÅäÖÃ¿ÉÒÔÊÇÖ¸¶¨ÐÐÎªÀàµÄ×Ö·û´®£¬Ò²¿ÉÒÔÊÇÒÔÏÂ½á¹¹µÄÊý×é
+     *ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ÖµÓ¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¡ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â½á¹¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * ```php
      * 'behaviorName' => [
      *     'class' => 'BehaviorClass',
@@ -425,12 +425,12 @@ class Component extends Object
      * ```
      *
      * Note that a behavior class must extend from [[Behavior]]. Behaviors can be attached using a name or anonymously.
-     * ×¢Òâ£¬ÐÐÎªÀà±ØÐë´Ó[[ÐÐÎª]]À©Õ¹¡£ÐÐÎª¿ÉÒÔÓÃÒ»¸öÃû×Ö»òÄäÃûµÄ·½Ê½À´¸½¼Ó¡£
+     * ×¢ï¿½â£¬ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[[ï¿½ï¿½Îª]]ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½
      * When a name is used as the array key, using this name, the behavior can later be retrieved using [[getBehavior()]]
      * or be detached using [[detachBehavior()]]. Anonymous behaviors can not be retrieved or detached.
-     *µ±Ãû³Æ×÷ÎªÊý×é¼üÊ¹ÓÃÊ±£¬Ê¹ÓÃÕâ¸öÃû³Æºó£¬¿ÉÒÔÊ¹ÓÃ[[getBehavior()]]»òÊ¹ÓÃ[[detachBehavior()]]À´¼ìË÷ÐÐÎª¡£ÄäÃûÐÐÎª²»ÄÜ±»¼ìË÷»ò·ÖÀë¡£
+     *ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æºó£¬¿ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½[[getBehavior()]]ï¿½ï¿½Ê¹ï¿½ï¿½[[detachBehavior()]]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ü±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¡£
      * Behaviors declared in this method will be attached to the component automatically (on demand).
-     *ÔÚ´Ë·½·¨ÖÐÉùÃ÷µÄÐÐÎª½«±»×Ô¶¯¸½¼Óµ½×é¼þÉÏ(°´Ðè)¡£
+     *ï¿½Ú´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½
      * @return array the behavior configurations.
      */
     public function behaviors()

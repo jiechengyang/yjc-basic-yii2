@@ -64,11 +64,14 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
     const SCENARIO_DEFAULT = 'default';
     /**
      * @event ModelEvent an event raised at the beginning of [[validate()]]. You may set
+     * @event ModelEventåœ¨[[validate(]]]å¼€å§‹æ—¶æ‰€æå‡ºçš„äº‹ä»¶ã€‚ä½ å¯ä»¥è®¾ç½®
      * [[ModelEvent::isValid]] to be false to stop the validation.
+     * [[ModelEvent:isValid]]ä¸ºfalseåœæ­¢éªŒè¯ã€‚
      */
     const EVENT_BEFORE_VALIDATE = 'beforeValidate';
     /**
      * @event Event an event raised at the end of [[validate()]]
+     * @ Eventäº‹ä»¶åœ¨[[validate(]])ç»“æŸæ—¶æ‰€æå‡ºçš„äº‹ä»¶]
      */
     const EVENT_AFTER_VALIDATE = 'afterValidate';
 
@@ -159,11 +162,11 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
 
     /**
      * Returns a list of scenarios and the corresponding active attributes.
-     * ·µ»ØÒ»¸ö³¡¾°ÁĞ±íºÍÏàÓ¦µÄ»î¶¯ÊôĞÔ¡£
+     * è¿”å›ä¸€ä¸ªåœºæ™¯åˆ—è¡¨å’Œç›¸åº”çš„æ´»åŠ¨å±æ€§ã€‚
      * An active attribute is one that is subject to validation in the current scenario.
-     * »î¶¯ÊôĞÔÊÇÔÚµ±Ç°³¡¾°ÖĞ±»ÑéÖ¤µÄ¡£
+     * æ´»åŠ¨å±æ€§æ˜¯åœ¨å½“å‰åœºæ™¯ä¸­è¢«éªŒè¯çš„ã€‚
      * The returned array should be in the following format:
-     *·µ»ØµÄÊı×éÓ¦¸ÃÓĞÒÔÏÂ¸ñÊ½:
+     *è¿”å›çš„æ•°ç»„åº”è¯¥æœ‰ä»¥ä¸‹æ ¼å¼:
      * ```php
      * [
      *     'scenario1' => ['attribute11', 'attribute12', ...],
@@ -173,18 +176,18 @@ class Model extends Component implements IteratorAggregate, ArrayAccess, Arrayab
      * ```
      *
      * By default, an active attribute is considered safe and can be massively assigned.
-     * Ä¬ÈÏÇé¿öÏÂ£¬»î¶¯ÊôĞÔ±»ÈÏÎªÊÇ°²È«µÄ£¬²¢ÇÒ¿ÉÒÔ±»´óÁ¿·ÖÅä¡£
+     * é»˜è®¤æƒ…å†µä¸‹ï¼Œæ´»åŠ¨å±æ€§è¢«è®¤ä¸ºæ˜¯å®‰å…¨çš„ï¼Œå¹¶ä¸”å¯ä»¥è¢«å¤§é‡åˆ†é…ã€‚
      * If an attribute should NOT be massively assigned (thus considered unsafe),
-     * Èç¹ûÊôĞÔ²»Ó¦±»´óÁ¿·ÖÅä(Òò´Ë±»ÈÏÎªÊÇ²»°²È«µÄ)£¬
+     * å¦‚æœå±æ€§ä¸åº”è¢«å¤§é‡åˆ†é…(å› æ­¤è¢«è®¤ä¸ºæ˜¯ä¸å®‰å…¨çš„)ï¼Œ
      * please prefix the attribute with an exclamation character (e.g. `'!rank'`).
-     *ÇëÓÃÒ»¸ö¸ĞÌ¾ºÅ(ÀıÈç:¡±!¡°)ÅÅÃû¡£
+     *è¯·ç”¨ä¸€ä¸ªæ„Ÿå¹å·(ä¾‹å¦‚:â€!â€œ)æ’åã€‚
      * The default implementation of this method will return all scenarios found in the [[rules()]]
-     * ´Ë·½·¨µÄÄ¬ÈÏÊµÏÖ½«·µ»Ø[[rules(]]]ÖĞËù·¢ÏÖµÄËùÓĞ³¡¾°]ÉùÃ÷¡£
+     * æ­¤æ–¹æ³•çš„é»˜è®¤å®ç°å°†è¿”å›[[rules(]]]ä¸­æ‰€å‘ç°çš„æ‰€æœ‰åœºæ™¯]å£°æ˜ã€‚
      * declaration. A special scenario named [[SCENARIO_DEFAULT]] will contain all attributes
-     * ÃûÎª[[³¡¾°-Ä¬ÈÏ]]µÄÌØÊâ³¡¾°½«°üº¬ËùÓĞÊôĞÔ
+     *  åä¸º[[åœºæ™¯-é»˜è®¤]]çš„ç‰¹æ®Šåœºæ™¯å°†åŒ…å«æ‰€æœ‰å±æ€§
      * found in the [[rules()]]. Each scenario will be associated with the attributes that
      * are being validated by the validation rules that apply to the scenario.
-     *ÉùÃ÷¡£Ò»¸öÃûÎª[[³¡¾°-Ä¬ÈÏ]]µÄÌØÊâ³¡¾°½«°üº¬ÔÚ[¹æÔò()]ÖĞÕÒµ½µÄËùÓĞÊôĞÔ¡£Ã¿¸ö³¡¾°¶¼½«ÓëÓ¦ÓÃÓÚ¸Ã³¡¾°µÄÑéÖ¤¹æÔòÑéÖ¤µÄÊôĞÔÏà¹ØÁª¡£
+     *å£°æ˜ã€‚ä¸€ä¸ªåä¸º[[åœºæ™¯-é»˜è®¤]]çš„ç‰¹æ®Šåœºæ™¯å°†åŒ…å«åœ¨[è§„åˆ™()]ä¸­æ‰¾åˆ°çš„æ‰€æœ‰å±æ€§ã€‚æ¯ä¸ªåœºæ™¯éƒ½å°†ä¸åº”ç”¨äºè¯¥åœºæ™¯çš„éªŒè¯è§„åˆ™éªŒè¯çš„å±æ€§ç›¸å…³è”ã€‚
      * @return array a list of scenarios and the corresponding active attributes.
      */
     public function scenarios()
