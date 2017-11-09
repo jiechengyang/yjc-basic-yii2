@@ -30,6 +30,22 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'cgtB3zvzXHeLoQVvEQnX0K0PzHqprIU5',
         ],
+        /*自定义错误格式错误处理器根据响应设置的格式来显示错误， 如果response format 响应格式为html, 会使用错误或异常视图来显示错误信息，如上一小节所述。 对于其他的响应格式，错误处理器会错误信息作为数组赋值 给yii\web\Response::$data属性，然后转换到对应的格式， 例如，如果响应格式为json*/
+/**
+ *         'response' =>[
+ *             'class' => 'yii\web\Response',
+ *             'on beforeSend' => function ($event) {
+ *                 $response = $event->sender;
+ *                 if ($response->data != null) {
+ *                     $response->data = [
+ *                         'success' => $response->isSuccessful,
+ *                         'data' => $response->data,
+ *                     ];
+ *                     $response->statusCode = 200;
+ *                 }
+ *             }
+ *         ],
+ */
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

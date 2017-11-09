@@ -47,4 +47,10 @@ class UserForm extends \yii\db\ActiveRecord
             'Hex' => 'Hex'
         ];
     }
+    public  function getOrders()
+    {
+        //$orders = $this->hasMany(Order::className(),['user_id' => 'id'])->asArray()->all();
+        $orders = $this->hasMany(Order::className(),['user_id' => 'id'])->asArray();
+        return $orders;
+    }
 }

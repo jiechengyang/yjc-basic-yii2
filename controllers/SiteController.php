@@ -11,6 +11,8 @@ use app\models\ContactForm;
 use app\models\EntryForm;
 use app\models\RegistrationForm;
 use app\models\UploadImageForm;
+use app\models\Order;
+use app\models\UserForm;
 use app\models\MyUser;
 use yii\bootstrap\Alert;
 use yii\base\DynamicModel;//支持动态定义attributes 和 rules。
@@ -34,12 +36,19 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout','special-callback'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' =>['special-callback'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule,$action) {
+                            return date('m-d') === '11-31';
+                        }
                     ],
                 ],
             ],
@@ -68,7 +77,15 @@ class SiteController extends Controller
             ],
         ];
     }
-
+    /*或者这样使用自定义错误提示
+    public function actionError()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        //Yii::$app->getResponse()->redirect($url)->send();重定向
+        if ($exception !== null) {
+            return $this->render('error', ['exception' => $exception]);
+        }
+    }*/
     /**
      * Displays homepage.
      *
@@ -236,6 +253,23 @@ class SiteController extends Controller
         //Yii::$app->response->statusCode = 201;  
         //throw new \yii\web\GoneHttpException;
         // Yii::$app->response->headers->add('Pragma','no-cache');
+        $headers = Yii::$app->response->headers;
+        
+        // 增加一个 Pragma 头，已存在的Pragma 头不会被覆盖。
+        $headers->add('Pragma', 'no-cache');
+        
+        // 设置一个Pragma 头. 任何已存在的Pragma 头都会被丢弃
+        $headers->set('Pragma', 'no-cache');
+        
+        // 删除Pragma 头并返回删除的Pragma 头的值到数组
+        $values = $headers->remove('Pragma');
+        Yii::$app->response->content = 'hello world!';
+/**
+ *         HTML: 通过 yii\web\HtmlResponseFormatter 来实现.
+ *         XML: 通过 yii\web\XmlResponseFormatter来实现.
+ *         JSON: 通过 yii\web\JsonResponseFormatter来实现.
+ *         JSONP: 通过 yii\web\JsonResponseFormatter来实现.
+ */
         /**
          * 以 JSON 格式响应
         *\yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -249,7 +283,8 @@ class SiteController extends Controller
         */
         //重定向
         //return $this->redirect('http://www.yiibai.com/');
-        //return Yii::$app->response->sendFile('favicon.ico');
+        //return Yii::$app->response->sendFile('favicon.ico');//发送文件
+        //\Yii::$app->response->sendFile('path/to/file.txt')->send();//如果不是在操作方法中调用文件发送方法，在后面还应调用 yii\web\Response::send() 没有其他内容追加到响应中。
          //return Yii::$app->response->sendStreamAsFile('img/test-img.jpg','1223');
      }
      //程序暂时维护中
@@ -531,5 +566,200 @@ class SiteController extends Controller
             echo '<pre>';
             print_r(MyUser::find()->asArray()->all());
         }
+    }
+    /*依赖注入*/
+    public function actionTestInterface()
+    {
+        $container = new \yii\di\Container();
+        $container->set("\app\components\MyInterface","\app\components\First");
+        $obj = $container->get("\app\components\MyInterface");
+        $obj->test(); // print "First class"
+        $container->set("\app\components\MyInterface","\app\components\Second");
+        $obj = $container->get("\app\components\MyInterface");
+        $obj->test(); // print "Second class
+    }
+    /*数据访问对象*/
+    public function actionTestDb()
+    {
+        $users = Yii::$app->db->createCommand("SELECT * FROM `user` LIMIT 5")->queryAll();//返回一组行。每行是列名称和值的关联数组。如果查询返回没有结果，则返回空数组
+        print_R($users);
+        $uone = Yii::$app->db->createCommand("SELECT * FROM `user` WHERE `id`=1")->queryOne();//返回一行(第一行)如果查询没有结果，则返回false
+        print_r($uone);
+        $userName = Yii::$app->db->createCommand('SELECT name FROM user')->queryColumn();//返回单个列(第一列)如果查询返回没有结果，则返回空数组
+        echo '<hr/>';
+        print_r($userName);
+        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM user')->queryScalar();//返回标量值,如果查询没有结果，则返回false
+        var_dump($count);
+    }
+    /*创建一个 SQL命令*/
+    public function actionTestDb2() {
+       $firstUser = Yii::$app->db->createCommand('SELECT * FROM user WHERE id = :id')
+          ->bindValue(':id', 1)
+          ->queryOne();
+       var_dump($firstUser);echo '<hr/>';
+       $params = [':id' => 2, ':name' => 'User2'];
+       $secondUser = Yii::$app->db->createCommand('SELECT * FROM user WHERE
+          id = :id AND name = :name')
+          ->bindValues($params)
+          ->queryOne();
+       /*
+            bindValue() − 绑定单个参数值
+            
+            bindValues() − 绑定多个参数值
+       */
+       var_dump($secondUser);echo '<hr/>';
+          //another approach
+       $params = [':id' => 3, ':name' => 'User3'];
+       $thirdUser = Yii::$app->db->createCommand('SELECT * FROM user WHERE
+          id = :id AND name = :name', $params)
+          ->queryOne();
+       var_dump($thirdUser);
+    }
+    /*INSERT, UPDATE 和 DELETE 查询*/
+    public function actionTestDb3() {
+          // INSERT (table name, column values)
+          Yii::$app->db->createCommand()->insert('user', [
+             'name' => 'My New User',
+             'email' => 'mynewuser@gmail.com',
+          ])->execute();
+          $user = Yii::$app->db->createCommand('SELECT * FROM user WHERE name = :name')
+             ->bindValue(':name', 'My New User')
+             ->queryOne();
+          var_dump($user);echo '<hr/>';
+          // UPDATE (table name, column values, condition)
+          Yii::$app->db->createCommand()->update('user', ['name' => 'My New User
+             Updated'], 'name = "My New User"')->execute();
+          $user = Yii::$app->db->createCommand('SELECT * FROM user WHERE name = :name')
+             ->bindValue(':name', 'My New User Updated')
+             ->queryOne();
+          var_dump($user);echo '<hr/>';
+          // DELETE (table name, condition)
+          Yii::$app->db->createCommand()->delete('user', 'name = "My New User
+             Updated"')->execute();
+          $user = Yii::$app->db->createCommand('SELECT * FROM user WHERE name = :name')
+             ->bindValue(':name', 'My New User Updated')
+             ->queryOne();
+          var_dump($user);
+    }
+    /*查询生成器*/
+    public function actionTestDb4() {
+       //generates "SELECT id, name, email FROM user WHERE name = 'User10';"
+       $user = (new \yii\db\Query())
+          ->select(['id', 'name', 'email'])
+          ->from('user')
+          ->where(['name' => 'User10'])
+          ->one();
+       var_dump($user);
+    }
+    /*WHERE()函数*/
+    public function actionTestDb5() {
+       $user = (new \yii\db\Query())
+          ->select(['id', 'name', 'email'])
+          ->from('user')
+          ->where([
+             'name' => 'User5',
+             'email' => 'user55@gmail.com'
+          ])
+          ->one();
+       var_dump($user);
+    }
+    /**
+     *运算符格式化允许定义任意条件的格式如下 -
+        [operator, operand1, operand2]
+        操作符可以是 -
+        and − ['and', 'id = 1', 'id = 2'] 会产生类似： id = 1 AND id = 2
+        
+        between − ['between', 'id', 1, 15] 会产生类似：id BETWEEN 1 AND 15
+        
+        not between − 类似 between 操作符, 但是 BETWEEN 被替换为 NOT BETWEEN
+        
+        in − ['in', 'id', [5,10,15]] 会产生类似： IN (5,10,15)
+        
+        not in − 类似  in 操作符,但是 IN 被替换为 NOT IN
+        
+        like − ['like', 'name', 'user'] 会产生类似： name LIKE '%user%'
+        
+        or like − 类似  like 操作符, 但是 OR 用来分割 LIKE 谓词
+        
+        not like − 类似于 like 操作符, 但是 LIKE 被 NOT LIKE 替代； 
+        
+        or not like − 类似 not like 运算符，但或用来连接 NOT LIKE 谓词
+        
+        exists − 要求一个操作数必须是 yii\db\Query 类的一个实例
+        
+        not exists − 类似 exists 操作符，但是构建了一个NOT EXISTS(子查询)的表达式
+        
+        <, <=, >, >=, 或任何其他数据库操作符: ['<', 'id', 10] 会产生类似： id<10 
+     * 
+     */
+    public function actionTestDb6() {
+        $users = (new \yii\db\Query())
+          ->select(['id', 'name', 'email'])
+          ->from('user')
+          ->where(['between', 'id', 5, 7])
+          ->all();
+        var_dump($users);
+    }
+    /*OrderBy()函数*/
+    public function actionTestDb7() {
+       $users = (new \yii\db\Query())
+          ->select(['id', 'name', 'email'])
+          ->from('user')
+          ->orderBy('name DESC')
+          ->all();
+       var_dump($users);
+    }
+    /*groupBy()函数*/
+    public function actionTestDb8() {
+       $users = (new \yii\db\Query())
+          ->select(['id', 'name', 'email'])
+          ->from('user')
+          ->groupBy('name')
+          ->having('id < 5')
+          ->all();
+       var_dump($users);
+    }
+    /*limit() 和 offset() 方法定义了 LIMIT 和 OFFSET 段。*/
+    public function actionTestDb9() {
+       $users = (new \yii\db\Query())
+          ->select(['id', 'name', 'email'])
+          ->from('user')
+          ->limit(5)
+          ->offset(5)
+          ->all();
+       var_dump($users);
+    }
+    /*
+    yii\db\Query 类提供了一组用于不同的目的的方法 -
+    all() − 返回一行为名称-值对的数组。
+    one() − 返回第一行
+    column() − 返回第一列
+    scalar() − 返回结果的第一行和第一列的标量值。
+    exists() − 返回指示查询是否包含任何结果值
+    count() 返回COUNT查询结果
+    其他聚集查询方法 - 包括：sum($q), average($q), max($q), min($q)。$q 参数可以是列名 或 DB 表达式。
+    */
+    //关联查询1:n
+    public function actionGuanLian()
+    {
+        //查询客户的所有订单 SELECT a.username,b.* FROM `byt_user` a LEFT JOIN `byt_order` b ON a.id=b.user_id;
+        $customer = UserForm::find()->where(['username' => 'yangjiecheng'])->one();//->asArray()
+        //$lists = $customer->hasMany(Order::className(),['user_id' => 'id'])->asArray()->all();
+        //$lists = $customer->getOrders();
+        $lists = $customer->orders;
+        echo '<pre>';print_r($lists);
+    }
+    //关联查询1:1
+    public function actionGuanLian2(){
+        //查询某个订单对应的客户信息 SELECT b.*,a.id FROM `byt_order` a LEFT JOIN `byt_user` b ON a.user_id = b.id;
+        $order = Order::find()->where(['id' => 1])->one();
+        //$users = $order->getUsers();
+        $users = $order->users;
+        echo '<pre>';print_r($users);
+    }
+    //// 匹配的回调函数被调用了！这个页面只有每年的10月31号能访问（译者注：原文在这里说该方法是回调函数不确切，读者不要和 `matchCallback` 的值即匿名的回调函数混淆理解）
+    public function actionSpecialCallback()
+    {
+         return $this->render('happy-halloween');
     }
 }

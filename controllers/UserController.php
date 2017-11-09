@@ -5,7 +5,9 @@
  use yii\filters\AccessControl;
  use yii\web\Response;
  use app\models\userForm;
+ use app\models\Profile;
  use yii\bootstrap\Alert;
+ use yii\web\NotFoundHttpException;
  class UserController extends Controller
  {
     private $usermodel;
@@ -55,5 +57,32 @@
         }else{
             echo 2;
         }
+     }
+     /*多模型的复合表单*/
+     public function actionUpdate($id)
+     {
+        $user = userForm::findOne($id);
+        if (!$user) {
+            throw new NotFoundHttpException("没有找到用户登录信息！");
+        }
+        $profile = Profile::findOne($user->profile_id);
+        if (!$profile) {
+            throw new NotFoundHttpException("没有找到用户基本信息");
+        }
+        $user->scenario = 'update';
+        $profile->scenario = 'update';
+        if ($user->load (Yii::$app->request->post()) && $profile->load(Yii::$app->request->post())) {
+            $isValid = $user->validate();
+            $isValid = $profile->validate() && $isValid;
+            if ($isValid) {
+                $user->save(false);
+                $profile->save(false);
+                return $this->redirect(['user/view', 'id' => $id]);
+            }
+        }
+        return $this->render('update', [
+            'user' => $user,
+            'profile' => $profile,
+        ]);
      }
  }
